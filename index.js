@@ -5,4 +5,3 @@ while(value != str)
     value=prompt("wrong name please try again:");
 }
 console.log("Win");
-
