@@ -4,14 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login page</title>
+    <style>
+       
+      
+       .div2{
+        border-radius: 20px;
+        border:2px solid black;
+        width: 400px;
+        text-align: center;
+        background-size: cover;
+        background-color: rgba(238, 200, 200, 0.2);
+
+       }
+       .div1{
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        background-size: 100% 100%;
+       
+       }
+       input{
+        height: 20px;
+       }
+    </style>
 </head>
 
 <body >
-    <div>
-    <center>
-    <fieldset style=" width:400px ; height: 200px;">
+    <div class="div1">
+    <div class="div2">
              
-                    <h2>Login Now</h2>
+                    <h1>Login Now</h1>
             <form action="./Ecommerce_website.html">
                 <label for="name">Name:</label>
                  <input id="name" type="text" placeholder="Enter Name" required><br><br>
@@ -20,12 +45,13 @@
                  <label for="password" >password:</label>
                  <input id="password" type="text" placeholder="Enter password" required><br><br>
                 
-                <input  type="submit" value="submit" style="color:green">
+                <input  type="submit" value="Login" style="color:green">
 
             </form>
-        
-    </fieldset>
-    </center>
+       </div> 
+    
+    </div>
+    
     
 </body>
 
