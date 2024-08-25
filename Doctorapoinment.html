@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f0f0f0;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          /* height: 100vh; */
+        }
+
+    
+        .container {
+          background-color: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          width: 300px;
+        }
+    
+        h1 {
+          text-align: center;
+        }
+    
+        .appointment-section {
+          margin-bottom: 20px;
+        }
+    
+        .appointment-section h2 {
+          margin-bottom: 10px;
+        }
+    
+        label {
+          display: block;
+          margin-bottom: 5px;
+        }
+    
+        input, select {
+          width: calc(100% - 22px);
+          padding: 10px;
+          margin-bottom: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
+    
+        button {
+          padding: 10px 20px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          width: 100%;
+        }
+    
+        button:hover {
+          background-color: #0056b3;
+        }
+    
+        #appointmentDisplay {
+          background-color: #f8f9fa;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          margin-top: 10px;
+          height: 150px;
+          overflow-y: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+    
+        .doctor-card {
+          background-color: #e9ecef;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          margin-top: 10px;
+        }
+      </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Doctor Appoitmnet Booking System</h1>
+    <div class="appointment-section">
+        <h2>Book Appoitmnet</h2>
+        <label for="patientName">Patient Name:</label>
+        <input type="text" id="patientName" placeholder="Enter Name">
+        <label for="doctorName">Doctor Name:</label>
+        <select id="doctorName"></select>
+        <label for="appointmentDate">Appoitmnet Date:</label>
+        <input type="date" id="appointmentDate">
+        <label for="appointmentTime">Appoitmnet Time:</label>
+        <input type="time" id="appointmentTime">
+        <button onclick="handleBookAppointment()">Book Appointmnet</button>
+    </div>
+    
+    <div class="appointment-section">
+        <h2>cancel Appointmnet</h2>
+        <label for="cancelAppointmentId">Appointment ID:</label>
+        <input type="text" id="cancelAppointmentId">
+        <button onclick="handleCancelBookAppointment()">Cancel Appointment</button>
+    </div>
+    <div class="appointment-section">
+        <h2>View Appointmnets</h2>
+        <button>Show Appointments</button>
+        <ul id="appointmentDisplay"></ul>
+    </div>
+
+    <div class="appointment-section">
+        <h2>Doctors List</h2>
+        <div id="doctorCards"></div>
+    </div>
+    </div>
+
+    <script>
+        let appointments=[];
+        let appointmentId=0;
+        const appointmentDisplay=document.getElementById('appointmentDisplay');
+        const doctors=[
+    {name: "Dr. Smith", id: 1, specialty: "Cardiology", yearsOfExperience: 15, location: "New York"},
+    {name: "Dr. Johnson", id: 2, specialty: "Neurology", yearsOfExperience: 12, location: "Los Angeles"},
+    {name: "Dr. Williams", id: 3, specialty: "Pediatrics", yearsOfExperience: 10, location: "Chicago"},
+    {name: "Dr. Brown", id: 4, specialty: "Orthopedics", yearsOfExperience: 8, location: "Houston"},
+    {name: "Dr. Davis", id: 5, specialty: "Dermatology", yearsOfExperience: 20, location: "Phoenix"},
+    {name: "Dr. Miller", id: 6, specialty: "Oncology", yearsOfExperience: 18, location: "Philadelphia"},
+    {name: "Dr. Wilson", id: 7, specialty: "Gastroenterology", yearsOfExperience: 7, location: "San Antonio"},
+    {name: "Dr. Moore", id: 8, specialty: "Endocrinology", yearsOfExperience: 14, location: "San Diego"},
+    {name: "Dr. Taylor", id: 9, specialty: "Psychiatry", yearsOfExperience: 9, location: "Dallas"},
+    {name: "Dr. Anderson", id: 10, specialty: "Ophthalmology", yearsOfExperience: 11, location: "San Jose"}
+        ];
+    //   show details in select form value
+        (function initializeDoctorSelect(){
+            const select=document.getElementById('doctorName');
+            doctors.forEach(doctor=>{
+                const option=document.createElement('option');
+                option.value=doctor.name;
+                option.text=doctor.name;
+                select.add(option);
+            }) })()
+            
+           //to push appointmentsdetail and call sho appointments
+            function bookAppointment(patientName,doctorName,appointmentDate,appointmentTime){
+            appointmentId++;
+
+            appointments.push({id:appointmentId,patientName,doctorName,appointmentDate,appointmentTime});
+            showAppointments();
+            updateDoctorCards()
+            }
+            //to show appointments details in front end
+            function showAppointments(){
+              console.log(appointments);
+              let output='Appointments:\n';
+                // const li=document.createElement('li')
+                // li.innerHTML='';
+                appointments.forEach(appointment=>{
+                    // li.innerHTML=`ID:${appointment.id}, Patinet: ${appointment.patientName}, Doctor: ${appointment.doctorName}, Date: ${appointment.appointmentDate}, Time: ${appointment.appointmentTime}\n `;
+                    // appointmentDisplay.appendChild(li)
+                    output+=`ID:${appointment.id}, Patinet: ${appointment.patientName}, Doctor: ${appointment.doctorName}, Date: ${appointment.appointmentDate}, Time: ${appointment.appointmentTime}\n `
+                })
+                document.getElementById('appointmentDisplay').textContent=output;
+
+            }
+            //to get appointments details from user after clicking button
+            function handleBookAppointment(){
+                let patientName=document.getElementById('patientName').value;
+                let doctorName=document.getElementById('doctorName').value;
+                let appointmentDate=document.getElementById('appointmentDate').value;
+                let appointmentTime=document.getElementById('appointmentTime').value;
+                if(!patientName || !doctorName || !appointmentDate || !appointmentTime){
+                    alert('Please fill the details');
+                    return;
+                }
+                bookAppointment(patientName,doctorName,appointmentDate,appointmentTime)
+            }
+            function updateDoctorCards(){
+                const doctorCards=document.getElementById('doctorCards');
+                doctorCards.innerHTML='';
+                doctors.forEach(doctor=>{
+                    // const doctorAppointment=appointments.filter((app)=>
+                    // {
+                    //  return app.doctorName===doctor.name
+                    // });          
+                    const doctorAppointment=appointments.filter((app)=>app.doctorName===doctor.name);             
+                    console.log('doctorAppointment',doctorAppointment);
+                    const card=document.createElement('div');
+                    card.className='doctor-card';
+                    card.innerHTML=`<b> ${doctor.name} </b> <br>Total Appointments: ${doctorAppointment.length}`;
+                    doctorAppointment.forEach(da=>{
+                      card.innerHTML+=`ID: ${da.id},Patinet Name: ${da.patientName}, Date: ${da.appointmentDate}, Time: ${da.appointmentTime}<br>`
+                    })
+                    doctorCards.appendChild(card)
+
+                })
+                // const card=document.createElement('div');
+                // card.className='doctor-card';
+               
+            }
+
+           
+          
+    function handleCancelBookAppointment(){
+      let id=document.getElementById('cancelAppointmentId').value;
+      if(!id){
+        alert("ENter id")
+        return;
+      }
+      cancelAppointment(id);
+    }
+    function cancelAppointment(id){
+      appointments=appointments.filter(appointment=> appointment.id!=id)
+      showAppointments();
+      updateDoctorCards();
+    }
+    </script>
+</body>
+</html>
