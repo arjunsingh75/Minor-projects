@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .main{
+            display: flex;
+            width: 100vw;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            /* background-color: red; */
+        }
+        .bookdDetails{
+            display: flex;
+            width: 700px;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            border-bottom: 2px solid red;
+           
+            /* background-color: blue; */
+        }
+        button{
+            width: 100px;
+            margin-bottom: 10px;
+            background-color: cadetblue;
+        }
+        
+    </style>
+</head>
+<body>
+    <h1>Novels List</h1>
+    <div id="booksList" class="main"></div>
+    <script>
+        const booksList=document.getElementById('booksList');
+        let updatebtn,deletebtn;
+        const fetchBooks=async ()=>{
+           try{
+            const response=await fetch('http://localhost:3500/books');
+            // console.log(response);
+            const books=await response.json();
+            console.log(books);
+            booksList.innerHTML='';
+            books.forEach(book=>{
+                const div=document.createElement('div');
+                div.innerHTML=`
+                <h1>${book.title}</h1>
+                <h3>${book.author}</h3>
+                <p>${book.description}</p> `;
+
+                
+       updatebtn=document.createElement('button');
+       updatebtn.textContent='Edit';
+            //   update button
+  
+    updatebtn.addEventListener('click',async()=>{
+        const newTitle=prompt('enter new title:',book.title);
+            const newAuthor=prompt('enter new author:',book.author);
+            const newDesp=prompt('enter new description:',book.description);
+            if(newTitle || newAuthor || newDesp){
+                await fetch(`http://127.0.0.1:3500/books/${book.id}`,{
+                    method:'Put',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify({title:newTitle,author:newAuthor,description:newDesp})
+                })
+                fetchBooks();
+            }
+
+    })
+
+      deletebtn=document.createElement('button');
+      deletebtn.textContent='Delete';
+      deletebtn.addEventListener('click',async()=>{
+          await fetch(`http://127.0.0.1:3500/books/${book.id}`,{
+            method:'delete'
+            // headers:{'content-type':'application/json'}
+          })
+          fetchBooks();
+      })
+      div.appendChild(deletebtn);
+      div.appendChild(updatebtn);
+      div.classList.add('bookdDetails')
+      booksList.appendChild(div);
+
+            })
+           }
+           catch(e){
+            console.log(e);
+           }
+        }
+        fetchBooks();
+
+     
+
+       
+    </script>
+</body>
+</html>
