@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>js-project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        nav {
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: black;
+            color: aliceblue;
+            height: 40px;
+        }
+         nav a{
+            text-decoration: none;
+            color: rgb(194, 204, 204);
+         }
+        .maindiv {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .products, .cart {
+            margin: 10px;
+            padding: 10px;
+            background-color: rgba(232, 232, 225, 0.815);
+            width: 45%;
+            border-radius: 5px;
+        }
+       
+        .products h3, .cart h3 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: rgb(31, 31, 229);
+            color: azure;
+            border: none;
+            padding: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .cart-item,.product{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .cart-item span {
+            margin-right: 10px;
+        }
+        .quantity-buttons {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-buttons button {
+            padding: 5px 10px;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <h3>Get Everything</h3>
+        <a href="#">Mobile</a>
+        <a href="#">Laptop</a>
+        <a href="#">Electronics</a>
+        <a href="#">Furniture</a>
+        <a href="#">Devices</a>
+    </nav>
+
+    <div class="maindiv">
+        <div class="products">
+            <h3>Products</h3>
+            <div class="product_list">
+             <!-- Product Cards -->
+            </div>      
+        </div>
+        
+        <div class="cart">
+            <h3>Your Cart</h3>
+            <div class="cart-items">
+            
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const products = [
+            { id: 1, name: "Product 1", price: 10 },
+            { id: 2, name: "Product 2", price: 20 },
+            { id: 3, name: "Product 3", price: 30 },
+            { id: 4, name: "Product 4", price: 40 },
+            { id: 5, name: "Product 5", price: 40 },
+            { id: 6, name: "Product 6", price: 30 },
+            { id: 7, name: "Product 7", price: 30 },
+            { id: 8, name: "Product 8", price: 40 },
+        ];
+
+        let cart = {};
+
+        const productListContainer = document.querySelector(".product_list");
+        const cartItemsContainer = document.querySelector(".cart-items");
+
+        // Function to update the product list
+        function displayProducts() {
+            productListContainer.innerHTML = '';
+            products.forEach(product => {
+                const productCard = document.createElement("div");
+                productCard.classList.add("product");
+                productCard.innerHTML = `
+                    <h4>${product.name}</h4>
+                    <p>Price: $${product.price}</p>
+                    <button onclick="addToCart(${product.id})">Add to Cart</button>
+                `;
+                productListContainer.appendChild(productCard);
+            });
+        }
+
+        // Function to add a product to the cart
+        function addToCart(productId) {
+            if (!cart[productId]) {
+                cart[productId] = { ...products.find(product => product.id === productId), quantity: 1 };
+            } else {
+                cart[productId].quantity++;
+            }
+            updateCart();
+        }
+
+        // Function to update the cart view
+        function updateCart() {
+            cartItemsContainer.innerHTML = '';
+            for (const productId in cart) {
+                const cartItem = cart[productId];
+                const cartItemDiv = document.createElement("div");
+                cartItemDiv.classList.add("cart-item");
+                cartItemDiv.innerHTML = `
+                    <span>${cartItem.name} - $${cartItem.price}</span>
+                    <div class="quantity-buttons">
+                        <button onclick="changeQuantity(${cartItem.id}, -1)">-</button>
+                        <span>${cartItem.quantity}</span>
+                        <button onclick="changeQuantity(${cartItem.id}, 1)">+</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartItemDiv);
+            }
+        }
+
+        // Function to change the quantity of an item in the cart
+        function changeQuantity(productId, delta) {
+            if (cart[productId]) {
+                cart[productId].quantity += delta;
+                if (cart[productId].quantity <= 0) {
+                    delete cart[productId]; // Remove item from cart if quantity is 0
+                }
+                updateCart();
+            }
+        }
+
+        // Initial product display
+        displayProducts();
+    </script>
+</body>
+</html>
